@@ -7,7 +7,7 @@ It connects to both CEX,DEX sources, and oracles, to get the data and provides s
 Project has been built on top of Apache Parquet, Apache Arrow and Apache Ballista.
 
 ## Project deliverables
-* Get Live and Historical data from sources listed [here](##Connectors)
+* Get Live and Historical data from sources listed [here](#Connectors)
 * Set of pre-defined functions to run on top of the downloaded data
 * ML stuff
 * Web app built with Yew to visualize various stats and stuff

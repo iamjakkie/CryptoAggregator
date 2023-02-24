@@ -10,7 +10,7 @@ struct ExchangeInfo {
     rate_limits: Vec<RateLimit>,
     server_time: u128,
     assets: Vec<Asset>,
-    
+    symbols: Vec<Symbol>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -31,6 +31,10 @@ struct Asset {
     asset: String,
     marginAvailable: bool,
     autoAssetExchange: Option<u32>
+}
+
+struct Symbol {
+    
 }
 
 async fn f_get_server_time() {

@@ -31,8 +31,8 @@ struct RateLimit {
 #[derive(Serialize, Deserialize, Debug)]
 struct Asset {
     asset: String,
-    margin_available: bool,
-    auto_asset_exchange: Option<u32>
+    marginAvailable: bool,
+    autoAssetExchange: Option<String>
 }
 #[derive(Serialize, Deserialize, Debug)]
 struct Symbol {
@@ -167,7 +167,7 @@ async fn f_get_perpetuals() {
     println!("Server Time: {}", server_time);
     println!("Futures Type: {}", futures_type);
     println!("Rate limits: {:?}", rate_limits);
-
+    println!("assets: {:?}", assets);
     // println!("resp_formatted: {}", resp_formatted["serverTime"]);
 
     // let resp_result = serde_json::from_value::<u128>(resp_formatted["serverTime"].clone()).unwrap();

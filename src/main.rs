@@ -38,28 +38,28 @@ struct Asset {
 struct Symbol {
     symbol: String,
     pair: String,
-    contract_type: ContractType,
-    delivery_date: u64,
-    onboard_date: u64,
+    contractType: ContractType,
+    deliveryDate: u64,
+    onboardDate: u64,
     status: SymbolStatus,
-    main_margin_percent: f32,
-    required_margin_percent: f32,
-    base_asset: String,
-    quote_asset: String,
-    margin_asset: String,
-    price_precision: u8,
-    quantity_precision: u8,
-    base_asset_precision: u8,
-    quote_precision: u8,
-    underlying_type: UnderlyingType,
-    underlying_sub_type: Vec<UnderlyingSubType>,
-    settle_plan: u8,
-    trigger_protect: f32,
+    mainMarginPercent: f32,
+    requiredMarginpercent: f32,
+    baseAsset: String,
+    quoteAsset: String,
+    marginAsset: String,
+    pricePrecision: u8,
+    quantityPrecision: u8,
+    baseAssetPrecision: u8,
+    quotePrecision: u8,
+    underlyingType: UnderlyingType,
+    underlyingSubType: Vec<UnderlyingSubType>,
+    settlePlan: u8,
+    triggerProtect: f32,
     filters: Vec<Filter>,
-    order_type: Vec<OrderType>,
-    time_in_force: Vec<TimeInForce>,
-    liquidation_fee: f32,
-    market_take_bound: f32
+    orderType: Vec<OrderType>,
+    timeInForce: Vec<TimeInForce>,
+    liquidationFee: f32,
+    marketTakeBound: f32
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -82,7 +82,17 @@ enum OrderType {
 }
 #[derive(Serialize, Deserialize, Debug)]
 struct Filter {
-    filter_type: String,
+    filterType: String,
+    maxPrice: Option<String>,
+    minPrice: Option<String>,
+    tickSize: Option<String>,
+    maxQty: Option<String>,
+    minQty: Option<String>,
+    stepSize: Option<String>,
+    limit: Option<u32>,
+    multiplierUp: Option<String>,
+    multiplierDown: Option<String>,
+    multiplierDecimal: Option<String>,
 
 }
 
@@ -162,12 +172,14 @@ async fn f_get_perpetuals() {
     */
     let rate_limits = serde_json::from_value::<Vec<RateLimit>>(resp_formatted["rateLimits"].clone()).unwrap();
     let assets = serde_json::from_value::<Vec<Asset>>(resp_formatted["assets"].clone()).unwrap();
+    let symbols = serde_json::from_value::<Vec<Symbol>>(resp_formatted["symbols"].clone()).unwrap();
 
     println!("Timezone: {}", timezone);
     println!("Server Time: {}", server_time);
     println!("Futures Type: {}", futures_type);
     println!("Rate limits: {:?}", rate_limits);
     println!("assets: {:?}", assets);
+    println!("symbols: {:?}", symbols);
     // println!("resp_formatted: {}", resp_formatted["serverTime"]);
 
     // let resp_result = serde_json::from_value::<u128>(resp_formatted["serverTime"].clone()).unwrap();

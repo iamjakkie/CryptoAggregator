@@ -6,12 +6,13 @@ const FUTURES_BINANCE_URL:&str = "https://fapi.binance.com";
 
 #[derive(Serialize, Deserialize, Debug)]
 struct ExchangeInfo {
-    exchange_filter: ExchangeFilter,
-    rate_limits: Vec<RateLimit>,
-    server_time: u128,
+    exchangeFilters: ExchangeFilter,
+    rateLimits: Vec<RateLimit>,
+    serverTime: u128,
     assets: Vec<Asset>,
     symbols: Vec<Symbol>,
-    timezone: String
+    timezone: String,
+    futuresType: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -22,9 +23,9 @@ struct ExchangeFilter {
 #[derive(Serialize, Deserialize, Debug)]
 struct RateLimit {
     interval: String,
-    interval_num: u32,
+    intervalNum: u32,
     limit: u32,
-    rate_limit_type: String
+    rateLimitType: String
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -87,22 +88,22 @@ struct Filter {
 
 #[derive(Serialize, Deserialize, Debug)]
 enum ContractType {
-
+    PERPETUAL,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 enum SymbolStatus {
-
+    TRADING,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 enum UnderlyingType {
-
+    COIN
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 enum UnderlyingSubType {
-
+    STORAGE
 }
 
 async fn f_get_server_time() {
@@ -132,11 +133,47 @@ async fn f_get_perpetuals() {
     let res = reqwest::get(url)
         .await
         .unwrap()
-        .json()
+        .text()
         .await
         .unwrap();
 
-    println!("RES: {}", res);
+    println!("{:?}", &res[..2000]);
+
+    let resp_formatted:Value = serde_json::from_str(&res).unwrap();
+    
+    let timezone = serde_json::from_value::<String>(resp_formatted["timezone"].clone()).unwrap();
+    let server_time = serde_json::from_value::<u128>(resp_formatted["serverTime"].clone()).unwrap();
+    let futures_type = serde_json::from_value::<String>(resp_formatted["futuresType"].clone()).unwrap();
+    /* 
+        "rateLimits": [
+            {
+                "interval": "MINUTE",
+                "intervalNum": 1,
+                "limit": 2400,
+                "rateLimitType": "REQUEST_WEIGHT" 
+            },
+            {
+                "interval": "MINUTE",
+                "intervalNum": 1,
+                "limit": 1200,
+                "rateLimitType": "ORDERS"
+            }
+        ],
+    */
+    let rate_limits = serde_json::from_value::<Vec<RateLimit>>(resp_formatted["rateLimits"].clone()).unwrap();
+    let assets = serde_json::from_value::<Vec<Asset>>(resp_formatted["assets"].clone()).unwrap();
+
+    println!("Timezone: {}", timezone);
+    println!("Server Time: {}", server_time);
+    println!("Futures Type: {}", futures_type);
+    println!("Rate limits: {:?}", rate_limits);
+
+    // println!("resp_formatted: {}", resp_formatted["serverTime"]);
+
+    // let resp_result = serde_json::from_value::<u128>(resp_formatted["serverTime"].clone()).unwrap();
+    // println!("resp_result: {}", resp_result);
+
+
 }
 #[tokio::main]
 async fn main() {

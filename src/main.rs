@@ -42,8 +42,8 @@ struct Symbol {
     deliveryDate: u64,
     onboardDate: u64,
     status: SymbolStatus,
-    mainMarginPercent: f32,
-    requiredMarginpercent: f32,
+    mainMarginPercent: String,
+    requiredMarginPercent: String,
     baseAsset: String,
     quoteAsset: String,
     marginAsset: String,
@@ -54,12 +54,12 @@ struct Symbol {
     underlyingType: UnderlyingType,
     underlyingSubType: Vec<UnderlyingSubType>,
     settlePlan: u8,
-    triggerProtect: f32,
+    triggerProtect: String,
     filters: Vec<Filter>,
     orderType: Vec<OrderType>,
     timeInForce: Vec<TimeInForce>,
-    liquidationFee: f32,
-    marketTakeBound: f32
+    liquidationFee: String,
+    marketTakeBound: String
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -113,7 +113,8 @@ enum UnderlyingType {
 
 #[derive(Serialize, Deserialize, Debug)]
 enum UnderlyingSubType {
-    STORAGE
+    STORAGE,
+    PoW
 }
 
 async fn f_get_server_time() {
